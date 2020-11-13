@@ -7,14 +7,14 @@ function getPlots(id) {
         console.log(sampleValues)
         var labels = sampledata.samples[0].otu_labels.slce(0,10);
         console.log(labels)
-        var otu_top = (sampledata.samples[0].otu_ids.slice(0,10)).reverse();
-        var otu_id = otu_top.map(d => "OTU " +d);
-        console.log("OTU IDs: ${otu_id}")
+        var OTU_top = (sampledata.samples[0].otu_ids.slice(0,10)).reverse();
+        var OTU_id = otu_top.map(d => "OTU " +d);
+        console.log("OTU IDs: ${OTU_id}")
         var labels = sampledata.samples[0].otu_labels.slice(0,10);
         console.log("OTU_labels: ${labels}")
         var trace = {
             x: sampleValues,
-            y: otu_id, 
+            y: OTU_id, 
             text: labels, 
             marker: {
             color: "blue"},
@@ -46,13 +46,30 @@ function getPlots(id) {
             },
             text: sampledata.sample[0].otu_labels
         };
-        var layout2 = {
+        var layout_2 = {
             xaxis:{title: "OTU ID"},
             height: 600,
             width: 1000
         };
         var data1 = [trace1];
-    Plotly.newPlot("bubble", data1, layout2);
+    Plotly.newPlot("bubble", data1, layout_2);
+    });
+}
+
+function getDemoInfo(id) {
+    d3.json("samples.json").then((data) => {
+        var metadata = data.metadata;
+
+        console.log(metadata)
+
+        var result = metadata.filter(meta => meta.id.toString() ===id)[0];
+        var demographicInfo = d3.select("#sample-metadata");
+
+        demographicInfo.html("");
+
+        Object.defineProperties(result).forEach((key) => {
+            demographicInfo.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n");
+        });
     });
 }
 
